@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Student Registration Form</title>
+    <style type="text/css">
+
+    </style>
+</h:head>
+
+<h:body>
+    <h:form id="list">
+        <p:panel id="listPanel" header="Student List"
+                 style="font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;font-size: 15px; text-align: center">
+            <br/>
+            <p:dataTable id="listTable" var="student" value="#{studentController.studentList}">
+
+                <p:column headerText="Student Id">
+                    <h:outputText value="#{student.studentId}"/>
+                </p:column>
+
+                <p:column headerText="Name">
+                    <h:outputText value="#{student.name}"/>
+                </p:column>
+
+
+                <p:column headerText="Surname">
+                    <h:outputText value="#{student.surname}"/>
+                </p:column>
+
+
+                <p:column headerText="Mobile Phone Number">
+                    <h:outputText value="#{student.mobilePhoneNumber}"/>
+                </p:column>
+
+                <p:column headerText="City">
+                    <h:outputText value="#{student.city}"/>
+                </p:column>
+
+                <p:column headerText="Distinct">
+                    <h:outputText value="#{student.district}"/>
+                </p:column>
+
+                <p:column headerText="Description">
+                    <h:outputText value="#{student.description}"/>
+                </p:column>
+
+                <p:column headerText="Operation">
+                    <p:commandButton id="deleteId" value="Delete" ajax="false"
+                                     style="background: #007ad9; color: aliceblue;alignment: center"
+                                     action="#{studentController.deleteStudent(student)}"/>
+
+
+                    <p:commandButton update=":list:studentDetail" oncomplete="PF('studentDialog').show()" value="Select"
+                                     actionListener="#{studentController.onCityChangeForUpdate(student)}"
+                                     style="width: auto;background: #007ad9; color: aliceblue;alignment: center">
+                        <f:setPropertyActionListener value="#{student}" target="#{studentController.selectedStudent}"/>
+                    </p:commandButton>
+
+                </p:column>
+
+            </p:dataTable>
+        </p:panel>
+
+        <p:dialog header="Student Info" widgetVar="studentDialog" modal="true" showEffect="fade" hideEffect="fade"
+                  resizable="false">
+            <p:outputPanel id="studentDetail"
+                           style="text-align:center;width: 50%;font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;font-size: 15px">
+                <p:panelGrid columns="2" rendered="#{not empty studentController.selectedStudent}">
+
+                    <h:outputText value="Student Id :"/>
+                    <p:inputText label="#{studentController.selectedStudent.studentId}"
+                                 value="#{studentController.selectedStudent.studentId}"/>
+
+                    <h:outputText value="Name :"/>
+                    <p:inputText label="#{studentController.selectedStudent.name}"
+                                 value="#{studentController.selectedStudent.name}"/>
+
+                    <h:outputText value="Surname :"/>
+                    <p:inputText label="#{studentController.selectedStudent.surname}"
+                                 value="#{studentController.selectedStudent.surname}"/>
+
+                    <h:outputText value="Mobile Phone Number :"/>
+                    <p:inputText label="#{studentController.selectedStudent.mobilePhoneNumber}"
+                                 value="#{studentController.selectedStudent.mobilePhoneNumber}"/>
+
+
+                    <h:outputText value="City :"/>
+                    <p:selectOneMenu value="#{studentController.selectedStudent.city}" style="width:176px">
+                        <p:ajax listener="#{studentController.onCityChange}" update="districtUpdate"/>
+                        <f:selectItem itemLabel="Select City" itemValue="" noSelectionOption="true"/>
+                        <f:selectItems value="#{studentController.cities}"/>
+                    </p:selectOneMenu>
+
+
+                    <h:outputText value="District :"/>
+                    <p:selectOneMenu id="districtUpdate" value="#{studentController.selectedStudent.district}"
+                                     style="width:176px">
+                        <f:selectItem itemLabel="Select District" itemValue="" noSelectionOption="true"/>
+                        <f:selectItems value="#{studentController.districties}"/>
+                    </p:selectOneMenu>
+
+                    <h:outputText value="Description :"/>
+                    <p:inputText label="#{studentController.selectedStudent.description}"
+                                 value="#{studentController.selectedStudent.description}"/>
+
+                </p:panelGrid>
+                <br/>
+                <p:commandButton id="updateId" value="Update" ajax="false"
+                                 action="#{studentController.updateStudent(studentController.selectedStudent)}"
+                                 style="background: #007ad9; color: aliceblue; alignment: center"/>
+            </p:outputPanel>
+        </p:dialog>
+    </h:form>
+
+    <br/><br/>
+    <h:form id="add">
+        <p:panel id="addPanel" header="Add New Student"
+                 style="width: 50%;font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;font-size: 15px">
+            <h:panelGrid id="gridId" columns="3">
+
+                <p:outputLabel value="Student Id :"/>
+                <p:inputText id="studentId" value="#{studentController.student.studentId}" required="true" requiredMessage="#{msg['student.registration.empty.id']}"/>
+                <p:message for="studentId"/>
+
+
+                <p:outputLabel value="Name :"/>
+                <p:inputText id="nameId" value="#{studentController.student.name}" required="true" requiredMessage="#{msg['student.registration.empty.name']}"/>
+                <p:message for="nameId"/>
+
+                <p:outputLabel value="Surname :"/>
+                <p:inputText id="surnameId" value="#{studentController.student.surname}" required="true" requiredMessage="#{msg['student.registration.empty.surname']}"
+                             label="Surname"/>
+                <p:message for="surnameId"/>
+
+
+                <p:outputLabel value="Mobile Phone Number :"/>
+                <p:inputMask id="mobilePhoneId" value="#{studentController.student.mobilePhoneNumber}"
+                             mask="(999) 999-9999"
+                             label="Name"/>
+                <p:message for="mobilePhoneId"/>
+
+
+                <p:outputLabel for="city" value="City : "/>
+                <p:selectOneMenu id="city" value="#{studentController.student.city}" style="width:146px">
+                    <p:ajax listener="#{studentController.onCityChange}" update="district"/>
+                    <f:selectItem itemLabel="Select City" itemValue="" noSelectionOption="true"/>
+                    <f:selectItems value="#{studentController.cities}"/>
+                </p:selectOneMenu>
+                <p:message for="city"/>
+
+
+                <p:outputLabel for="district" value="District : "/>
+                <p:selectOneMenu id="district" value="#{studentController.student.district}" style="width:146px">
+                    <f:selectItem itemLabel="Select District" itemValue="" noSelectionOption="true"/>
+                    <f:selectItems value="#{studentController.districties}"/>
+                </p:selectOneMenu>
+                <p:message for="district"/>
+
+
+                <p:outputLabel for="description" value="Description : "/>
+                <p:inputText id="description" value="#{studentController.student.description}"/>
+                <p:message for="district"/>
+
+                <h:panelGrid columns="2">
+                    <p:commandButton id="btnId" value="Add" ajax="false" update="addPanel" process="@this"
+                                     action="#{studentController.addStudent}"
+                                     style="background: #007ad9; color: aliceblue"/>
+                </h:panelGrid>
+            </h:panelGrid>
+            <br/>
+            <h:form enctype="multipart/form-data">
+                <p:fileUpload value="#{studentController.file}" mode="simple" skinSimple="true" label="Choose File" style="width: 25%"/>
+            </h:form>
+        </p:panel>
+    </h:form>
+
+
+
+</h:body>
+</html>
