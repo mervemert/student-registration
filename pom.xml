@@ -30,6 +30,7 @@
         <hibernate.jpa>1.0.1.Final</hibernate.jpa>
         <hsqldb.version>2.4.0</hsqldb.version>
         <javax.servlet.version>2.5</javax.servlet.version>
+        <javax.validation.version>2.0.1.Final</javax.validation.version>
         <junit.version>4.12</junit.version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -123,6 +124,12 @@
             <artifactId>servlet-api</artifactId>
             <version>${javax.servlet.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>${javax.validation.version}</version>
         </dependency>
 
         <dependency>

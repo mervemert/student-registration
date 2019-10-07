@@ -8,10 +8,13 @@ import tr.com.netas.student.registration.entity.District;
 import tr.com.netas.student.registration.entity.Student;
 import tr.com.netas.student.registration.service.CityService;
 import tr.com.netas.student.registration.service.StudentService;
+import tr.com.netas.student.registration.util.ValidateUtil;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.validator.ValidatorException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,8 +70,20 @@ public class StudentController {
 
 
     public void addStudent() {
+        checkNonEmptyFields();
         studentService.saveStudent(student);
         setFieldAsNull(student);
+    }
+
+    private void checkNonEmptyFields() {
+        if(ValidateUtil.isEmpty(student.getId()))
+            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "student.registration.empty.id", null));
+
+        if(ValidateUtil.isEmpty(student.getName()))
+            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "student.registration.empty.name", null));
+
+        if(ValidateUtil.isEmpty(student.getSurname()))
+            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "student.registration.empty.surname", null));
     }
 
     private void setFieldAsNull(Student student) {

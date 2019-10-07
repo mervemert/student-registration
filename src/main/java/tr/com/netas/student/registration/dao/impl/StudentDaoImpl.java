@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import tr.com.netas.student.registration.dao.StudentDao;
 import tr.com.netas.student.registration.entity.Student;
 import tr.com.netas.student.registration.exception.ItemNotFoundException;
-import tr.com.netas.student.registration.validation.ValidateUtil;
+import tr.com.netas.student.registration.util.ValidateUtil;
 
 import java.util.List;
 import java.util.Optional;

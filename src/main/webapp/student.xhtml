@@ -127,7 +127,7 @@
                 <p:outputLabel value="Student Id :"/>
                 <p:inputText id="studentId" value="#{studentController.student.studentId}" required="true"
                              requiredMessage="#{msg['student.registration.empty.id']}">
-                    <f:validator validatorId="studentValidator"/>
+                    <f:validator validatorId="studentIdValidator"/>
                 </p:inputText>
                 <p:message for="studentId"/>
 

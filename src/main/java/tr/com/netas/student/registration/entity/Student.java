@@ -1,6 +1,8 @@
 package tr.com.netas.student.registration.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Entity
@@ -14,12 +16,18 @@ public class Student implements Serializable {
     private int id;
 
     @Column(name = "STUDENT_ID")
+    @Size(max = 11, message = "Student Id can be max 11 digit")
+    @NotNull
     private String studentId;
 
     @Column
+    @Size(max = 30)
+    @NotNull
     private String name;
 
     @Column
+    @Size(max = 30)
+    @NotNull
     private String surname;
 
     @Column(name = "PHONE_NUMBER")
@@ -32,6 +40,7 @@ public class Student implements Serializable {
     private String district;
 
     @Column
+    @Size(max = 150)
     private String description;
 
     private transient boolean editable;

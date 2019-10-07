@@ -1,4 +1,4 @@
-package tr.com.netas.student.registration.validation;
+package tr.com.netas.student.registration.util;
 
 public class ValidateUtil {
     public static boolean isEmpty(Object object) {
