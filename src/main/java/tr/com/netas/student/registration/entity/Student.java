@@ -15,7 +15,7 @@ public class Student implements Serializable {
     @TableGenerator(name = "STUDENT_GEN_HIBERNATE", initialValue = 100)
     private int id;
 
-    @Column(name = "STUDENT_ID")
+    @Column(name = "STUDENT_ID", unique = true)
     @Size(max = 11, message = "Student Id can be max 11 digit")
     @NotNull
     private String studentId;
@@ -43,12 +43,11 @@ public class Student implements Serializable {
     @Size(max = 150)
     private String description;
 
-    private transient boolean editable;
 
     public Student() {
     }
 
-    public Student(String studentId, String name, String surname, String mobilePhoneNumber, String city, String district, String description, boolean editable) {
+    public Student(String studentId, String name, String surname, String mobilePhoneNumber, String city, String district, String description) {
         this.studentId = studentId;
         this.name = name;
         this.surname = surname;
@@ -56,7 +55,6 @@ public class Student implements Serializable {
         this.city = city;
         this.district = district;
         this.description = description;
-        this.editable = editable;
     }
 
     public int getId() {
@@ -113,14 +111,6 @@ public class Student implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public boolean isEditable() {
-        return editable;
-    }
-
-    public void setEditable(boolean editable) {
-        this.editable = editable;
     }
 
     public String getStudentId() {
