@@ -18,11 +18,14 @@ import javax.faces.validator.ValidatorException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 @ManagedBean
 @ViewScoped
 @Component
 public class StudentController {
+
 
     @Autowired
     private StudentService studentService;

@@ -32,6 +32,7 @@
         <javax.servlet.version>2.5</javax.servlet.version>
         <javax.validation.version>2.0.1.Final</javax.validation.version>
         <junit.version>4.12</junit.version>
+        <slf4j-api-version>1.7.21</slf4j-api-version>
 
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -137,6 +138,12 @@
             <artifactId>junit</artifactId>
             <version>${junit.version}</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j-api-version}</version>
         </dependency>
 
         <dependency>

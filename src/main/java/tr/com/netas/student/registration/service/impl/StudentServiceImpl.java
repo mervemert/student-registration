@@ -1,5 +1,7 @@
 package tr.com.netas.student.registration.service.impl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tr.com.netas.student.registration.dao.StudentDao;
@@ -14,6 +16,8 @@ import java.util.Optional;
 @Service
 public class StudentServiceImpl implements StudentService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(StudentServiceImpl.class);
+
     @Autowired
     private StudentDao studentDao;
 
@@ -25,10 +29,11 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void updateStudent(Student student) {
         Student studentById = studentDao.findById(student.getId());
-        if (ValidateUtil.isNotEmpty(studentById))
+        if (ValidateUtil.isNotEmpty(studentById)) {
             studentDao.updateStudent(student);
-        else
-            throw new ItemNotFoundException("item not found");
+        } else {
+            LOGGER.error("item not found");
+        }
     }
 
     public void deleteStudent(int id) {

@@ -2,12 +2,15 @@ package tr.com.netas.student.registration.dao.impl;
 
 import org.hibernate.Query;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import tr.com.netas.student.registration.dao.StudentDao;
 import tr.com.netas.student.registration.entity.Student;
 import tr.com.netas.student.registration.exception.ItemNotFoundException;
+import tr.com.netas.student.registration.service.impl.StudentServiceImpl;
 import tr.com.netas.student.registration.util.ValidateUtil;
 
 import java.util.List;
@@ -16,6 +19,8 @@ import java.util.Optional;
 @Repository
 @Transactional
 public class StudentDaoImpl implements StudentDao {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(StudentDaoImpl.class);
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -30,10 +35,11 @@ public class StudentDaoImpl implements StudentDao {
 
     public void deleteStudent(int id) {
         Student studentToRemove = findById(id);
-        if (!ValidateUtil.isEmpty(studentToRemove))
+        if (!ValidateUtil.isEmpty(studentToRemove)) {
             sessionFactory.getCurrentSession().delete(studentToRemove);
+        }
         else
-            throw new ItemNotFoundException("item not found");
+            LOGGER.error("item not found");
     }
 
     @Override
