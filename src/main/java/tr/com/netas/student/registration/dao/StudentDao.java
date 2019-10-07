@@ -3,6 +3,7 @@ package tr.com.netas.student.registration.dao;
 import tr.com.netas.student.registration.entity.Student;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface StudentDao {
 
@@ -12,9 +13,10 @@ public interface StudentDao {
 
     void deleteStudent(int id);
 
-    Student getStudentById(int id);
+    Student findById(int id);
 
-    List<Student> findAllStudent();
+    Optional<Student> findByStudentId(String studentId);
 
+    List<Student> getAllStudent();
 
 }

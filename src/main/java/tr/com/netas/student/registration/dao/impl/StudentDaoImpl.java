@@ -7,8 +7,11 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import tr.com.netas.student.registration.dao.StudentDao;
 import tr.com.netas.student.registration.entity.Student;
+import tr.com.netas.student.registration.exception.ItemNotFoundException;
+import tr.com.netas.student.registration.validation.ValidateUtil;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional
@@ -26,18 +29,30 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     public void deleteStudent(int id) {
-        Student studentToRemove = getStudentById(id);
-        if (studentToRemove != null)
+        Student studentToRemove = findById(id);
+        if (!ValidateUtil.isEmpty(studentToRemove))
             sessionFactory.getCurrentSession().delete(studentToRemove);
+        else
+            throw new ItemNotFoundException("item not found");
     }
 
-    public Student getStudentById(int id) {
-        return  (Student)sessionFactory.getCurrentSession().get(Student.class, id);
+    @Override
+    public Student findById(int id) {
+        return sessionFactory.getCurrentSession().get(Student.class, id);
     }
 
-    public List<Student> findAllStudent() {
+    @Override
+    public List<Student> getAllStudent() {
         Query query = sessionFactory.getCurrentSession().createQuery("from Student");
         return query.list();
+    }
+
+    @Override
+    public Optional<Student> findByStudentId(String studentId) {
+        Query query = sessionFactory.getCurrentSession().createQuery("from Student s where s.studentId=:studentId");
+        query.setParameter("studentId", studentId);
+        Optional<Student> student = query.list().stream().findFirst();
+        return student;
     }
 
 

@@ -67,7 +67,7 @@ public class StudentController {
 
 
     public void addStudent() {
-        studentService.saveOrUpdate(student);
+        studentService.saveStudent(student);
         setFieldAsNull(student);
     }
 
@@ -83,17 +83,13 @@ public class StudentController {
     }
 
     public void updateStudent(Student student) {
-        studentService.saveOrUpdate(student);
+        studentService.updateStudent(student);
     }
 
 
     public void deleteStudent(Student student) {
         studentList.remove(student);
         studentService.deleteStudent(student.getId());
-    }
-
-    public List<Student> findAllStudent() {
-        return studentService.findAllStudent();
     }
 
     public void onCityChange() {
@@ -112,6 +108,11 @@ public class StudentController {
             districties = new HashMap<String, String>();
     }
 
+    public List<Student> getStudentList() {
+        studentList =  studentService.getAllStudent();
+        return studentList;
+    }
+
 
     public Student getStudent() {
         return student;
@@ -127,11 +128,6 @@ public class StudentController {
 
     public void setStudentService(StudentService studentService) {
         this.studentService = studentService;
-    }
-
-    public List<Student> getStudentList() {
-        studentList = studentService.findAllStudent();
-        return studentList;
     }
 
 

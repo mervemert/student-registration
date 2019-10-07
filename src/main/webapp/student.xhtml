@@ -17,7 +17,10 @@
         <p:panel id="listPanel" header="Student List"
                  style="font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;font-size: 15px; text-align: center">
             <br/>
-            <p:dataTable id="listTable" var="student" value="#{studentController.studentList}">
+            <p:dataTable id="listTable" var="student" value="#{studentController.studentList}" rows="5"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15">
 
                 <p:column headerText="Student Id">
                     <h:outputText value="#{student.studentId}"/>
@@ -67,44 +70,43 @@
         </p:panel>
 
         <p:dialog header="Student Info" widgetVar="studentDialog" modal="true" showEffect="fade" hideEffect="fade"
-                  resizable="false">
-            <p:outputPanel id="studentDetail"
-                           style="text-align:center;width: 50%;font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;font-size: 15px">
-                <p:panelGrid columns="2" rendered="#{not empty studentController.selectedStudent}">
+                  resizable="false" style="width: 80%;">
+            <p:outputPanel id="studentDetail">
+                <p:panelGrid columns="2" rendered="#{not empty studentController.selectedStudent}" style="alignment: center">
 
-                    <h:outputText value="Student Id :"/>
-                    <p:inputText label="#{studentController.selectedStudent.studentId}"
+                    <p:outputLabel value="Student Id:"/>
+                    <p:inputText label="#{studentController.selectedStudent.studentId}" disabled="true"
                                  value="#{studentController.selectedStudent.studentId}"/>
 
-                    <h:outputText value="Name :"/>
+                    <p:outputLabel value="Name :"/>
                     <p:inputText label="#{studentController.selectedStudent.name}"
                                  value="#{studentController.selectedStudent.name}"/>
 
-                    <h:outputText value="Surname :"/>
+                    <p:outputLabel value="Surname :"/>
                     <p:inputText label="#{studentController.selectedStudent.surname}"
                                  value="#{studentController.selectedStudent.surname}"/>
 
-                    <h:outputText value="Mobile Phone Number :"/>
-                    <p:inputText label="#{studentController.selectedStudent.mobilePhoneNumber}"
+                    <p:outputLabel value="Mobile Phone Number :"/>
+                    <p:inputMask label="#{studentController.selectedStudent.mobilePhoneNumber}" mask="(999) 999-9999"
                                  value="#{studentController.selectedStudent.mobilePhoneNumber}"/>
 
 
-                    <h:outputText value="City :"/>
+                    <p:outputLabel value="City :"/>
                     <p:selectOneMenu value="#{studentController.selectedStudent.city}" style="width:176px">
-                        <p:ajax listener="#{studentController.onCityChange}" update="districtUpdate"/>
+                        <p:ajax listener="#{studentController.onCityChangeForUpdate(studentController.selectedStudent)}" update="districtUpdate"/>
                         <f:selectItem itemLabel="Select City" itemValue="" noSelectionOption="true"/>
                         <f:selectItems value="#{studentController.cities}"/>
                     </p:selectOneMenu>
 
 
-                    <h:outputText value="District :"/>
+                    <p:outputLabel value="District :"/>
                     <p:selectOneMenu id="districtUpdate" value="#{studentController.selectedStudent.district}"
                                      style="width:176px">
                         <f:selectItem itemLabel="Select District" itemValue="" noSelectionOption="true"/>
                         <f:selectItems value="#{studentController.districties}"/>
                     </p:selectOneMenu>
 
-                    <h:outputText value="Description :"/>
+                    <p:outputLabel value="Description :"/>
                     <p:inputText label="#{studentController.selectedStudent.description}"
                                  value="#{studentController.selectedStudent.description}"/>
 
@@ -116,24 +118,28 @@
             </p:outputPanel>
         </p:dialog>
     </h:form>
-
-    <br/><br/>
+    <br/>
     <h:form id="add">
         <p:panel id="addPanel" header="Add New Student"
                  style="width: 50%;font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;font-size: 15px">
             <h:panelGrid id="gridId" columns="3">
 
                 <p:outputLabel value="Student Id :"/>
-                <p:inputText id="studentId" value="#{studentController.student.studentId}" required="true" requiredMessage="#{msg['student.registration.empty.id']}"/>
+                <p:inputText id="studentId" value="#{studentController.student.studentId}" required="true"
+                             requiredMessage="#{msg['student.registration.empty.id']}">
+                    <f:validator validatorId="studentValidator"/>
+                </p:inputText>
                 <p:message for="studentId"/>
 
 
                 <p:outputLabel value="Name :"/>
-                <p:inputText id="nameId" value="#{studentController.student.name}" required="true" requiredMessage="#{msg['student.registration.empty.name']}"/>
+                <p:inputText id="nameId" value="#{studentController.student.name}" required="true"
+                             requiredMessage="#{msg['student.registration.empty.name']}"/>
                 <p:message for="nameId"/>
 
                 <p:outputLabel value="Surname :"/>
-                <p:inputText id="surnameId" value="#{studentController.student.surname}" required="true" requiredMessage="#{msg['student.registration.empty.surname']}"
+                <p:inputText id="surnameId" value="#{studentController.student.surname}" required="true"
+                             requiredMessage="#{msg['student.registration.empty.surname']}"
                              label="Surname"/>
                 <p:message for="surnameId"/>
 
@@ -166,19 +172,21 @@
                 <p:inputText id="description" value="#{studentController.student.description}"/>
                 <p:message for="district"/>
 
-                <h:panelGrid columns="2">
-                    <p:commandButton id="btnId" value="Add" ajax="false" update="addPanel" process="@this"
+                <br/>
+                <h:panelGrid columns="1">
+                    <p:commandButton id="btnId" value="Add" ajax="false"
                                      action="#{studentController.addStudent}"
                                      style="background: #007ad9; color: aliceblue"/>
                 </h:panelGrid>
+
             </h:panelGrid>
             <br/>
             <h:form enctype="multipart/form-data">
-                <p:fileUpload value="#{studentController.file}" mode="simple" skinSimple="true" label="Choose File" style="width: 25%"/>
+                <p:fileUpload value="#{studentController.file}" mode="simple" skinSimple="true" label="Choose File"
+                              style="width: 25%"/>
             </h:form>
         </p:panel>
     </h:form>
-
 
 
 </h:body>

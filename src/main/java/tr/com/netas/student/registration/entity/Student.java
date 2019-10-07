@@ -9,11 +9,11 @@ public class Student implements Serializable {
 
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "STUDENT_GEN_HIBERNATE")
-    @TableGenerator(name = "STUDENT_GEN_HIBERNATE")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "STUDENT_GEN_HIBERNATE")
+    @TableGenerator(name = "STUDENT_GEN_HIBERNATE", initialValue = 100)
     private int id;
 
-    @Column(unique = true)
+    @Column(name = "STUDENT_ID")
     private String studentId;
 
     @Column
