@@ -17,6 +17,6 @@ public interface StudentService {
 
     List<Student> getAllStudent();
 
-    Optional<Student> findByStudentId(String studentId);
+    Optional<Student> findByStudentId(Long studentId);
 
 }

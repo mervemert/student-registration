@@ -15,14 +15,16 @@ import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
 import java.util.Optional;
 
-
+/*
+    validate for studentId whether or not unique
+ */
 @FacesValidator("studentIdValidator")
 public class StudentIdValidator implements Validator {
 
-
     @Override
     public void validate(FacesContext facesContext, UIComponent uiComponent, Object object) throws ValidatorException {
-        String studentId = (String) object;
+        //get field coming from xhtml page
+        Long studentId = (Long) object;
         String id = (String) uiComponent.getAttributes().get("studentId");
 
         StudentService studentService = (StudentService) SpringUtil.getBean("studentServiceImpl");
@@ -30,7 +32,7 @@ public class StudentIdValidator implements Validator {
 
         if (student.isPresent()) {
             if (id == null)
-                throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "error.duplicate.student.id", null));
+                throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Student Id is already exist", null));
         }
     }
 

@@ -1,5 +1,11 @@
 package tr.com.netas.student.registration.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -7,6 +13,10 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "STUDENT")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Student implements Serializable {
 
     @Id
@@ -15,19 +25,18 @@ public class Student implements Serializable {
     @TableGenerator(name = "STUDENT_GEN_HIBERNATE", initialValue = 100)
     private int id;
 
-    @Column(name = "STUDENT_ID", unique = true)
-    @Size(max = 11, message = "Student Id can be max 11 digit")
-    @NotNull
-    private String studentId;
+    @Column(name = "STUDENT_ID")
+    @NotNull(message = "Student Id must not be null")
+    private Long studentId;
 
     @Column
-    @Size(max = 30)
-    @NotNull
+    @Size(min=2, max = 50)
+    @NotNull(message = "Name must not be null")
     private String name;
 
     @Column
-    @Size(max = 30)
-    @NotNull
+    @Size(min = 2, max = 50)
+    @NotNull(message = "Surname must not be null")
     private String surname;
 
     @Column(name = "PHONE_NUMBER")
@@ -40,14 +49,12 @@ public class Student implements Serializable {
     private String district;
 
     @Column
-    @Size(max = 150)
+    @Size(max = 150, message = "Description must be max 150 character")
+    @Nullable
     private String description;
 
 
-    public Student() {
-    }
-
-    public Student(String studentId, String name, String surname, String mobilePhoneNumber, String city, String district, String description) {
+    public Student(Long studentId, String name, String surname, String mobilePhoneNumber, String city, String district, String description) {
         this.studentId = studentId;
         this.name = name;
         this.surname = surname;
@@ -57,67 +64,14 @@ public class Student implements Serializable {
         this.description = description;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
-
-    public String getMobilePhoneNumber() {
-        return mobilePhoneNumber;
-    }
-
-    public void setMobilePhoneNumber(String mobilePhoneNumber) {
-        this.mobilePhoneNumber = mobilePhoneNumber;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getDistrict() {
-        return district;
-    }
-
-    public void setDistrict(String district) {
-        this.district = district;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(String studentId) {
-        this.studentId = studentId;
+    public void initializeWithNull() {
+        this.setStudentId(null);
+        this.setName(null);
+        this.setSurname(null);
+        this.setMobilePhoneNumber(null);
+        this.setCity(null);
+        this.setDescription(null);
+        this.setDistrict(null);
+        this.setCity(null);
     }
 }

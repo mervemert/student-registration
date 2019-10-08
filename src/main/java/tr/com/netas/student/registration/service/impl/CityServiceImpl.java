@@ -9,6 +9,7 @@ import tr.com.netas.student.registration.service.CityService;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentMap;
 
 @Service
 public class CityServiceImpl implements CityService {
@@ -16,12 +17,11 @@ public class CityServiceImpl implements CityService {
     @Autowired
     private CityDao cityDao;
 
-
     public List<City> getAllCity() {
         return cityDao.getAllCity();
     }
 
-    public Map<City, District> getAllDistrict() {
+    public ConcurrentMap<City, District> getAllDistrict() {
         return cityDao.getAllDistrict();
     }
 }

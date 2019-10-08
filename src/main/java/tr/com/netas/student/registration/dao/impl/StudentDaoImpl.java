@@ -9,8 +9,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import tr.com.netas.student.registration.dao.StudentDao;
 import tr.com.netas.student.registration.entity.Student;
-import tr.com.netas.student.registration.exception.ItemNotFoundException;
-import tr.com.netas.student.registration.service.impl.StudentServiceImpl;
 import tr.com.netas.student.registration.util.ValidateUtil;
 
 import java.util.List;
@@ -54,7 +52,7 @@ public class StudentDaoImpl implements StudentDao {
     }
 
     @Override
-    public Optional<Student> findByStudentId(String studentId) {
+    public Optional<Student> findByStudentId(Long studentId) {
         Query query = sessionFactory.getCurrentSession().createQuery("from Student s where s.studentId=:studentId");
         query.setParameter("studentId", studentId);
         Optional<Student> student = query.list().stream().findFirst();

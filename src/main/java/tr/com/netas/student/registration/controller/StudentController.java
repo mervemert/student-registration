@@ -15,11 +15,11 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.validator.ValidatorException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Collectors;
 
 @ManagedBean
 @ViewScoped
@@ -35,42 +35,42 @@ public class StudentController {
 
     private List<Student> studentList;
     private Student student = new Student();
-    private List<City> allCity;
+    private List<City> allCityList;
     private List allDistrict;
-    private Map<Object, Map<String, String>> data = new HashMap<Object, Map<String, String>>();
+    private ConcurrentMap<Object, ConcurrentMap<String, String>> districtByCityData;
     private String city;
     private String district;
-    private Map<String, String> cities;
-    private Map<String, String> districties;
+    private ConcurrentMap<String, String> cities;
+    private ConcurrentMap<String, String> districties;
     private Student selectedStudent;
     private UploadedFile file;
 
 
     @PostConstruct
     public void init() {
-        addCities();
-        addDistricties();
+        districtByCityData = new ConcurrentHashMap<>();
+        populateCities();
+        populateDistricties();
     }
 
-    private void addDistricties() {
-        Map<String, String> map = new HashMap<String, String>();
+    //populate all city as parent
+    private void populateCities() {
+        cities = new ConcurrentHashMap<>();
+        allCityList = cityService.getAllCity();
+        cities = allCityList.stream().collect(Collectors.toConcurrentMap(City::getName, City::getName));
+
+    }
+
+    //populate all district as child by city
+    private void populateDistricties() {
+        ConcurrentMap<String, String> concurrentMap = new ConcurrentHashMap<>();
 
         for (Map.Entry<City, District> entry : cityService.getAllDistrict().entrySet()) {
-            for (District district : entry.getKey().getDistrictList()) {
-                map.put(district.getName(), district.getName());
-            }
-            data.put(entry.getKey().getName(), map);
-            map = new HashMap<String, String>();
+            concurrentMap = entry.getKey().getDistrictList().stream().collect(Collectors.toConcurrentMap(District::getName, District::getName));
+            districtByCityData.put(entry.getKey().getName(), concurrentMap);
+            concurrentMap = new ConcurrentHashMap<>();
         }
     }
-
-    private void addCities() {
-        cities = new HashMap<String, String>();
-        allCity = cityService.getAllCity();
-        for (City city : allCity)
-            cities.put(city.getName(), city.getName());
-    }
-
 
     public void addStudent() {
         checkNonEmptyFields();
@@ -79,14 +79,14 @@ public class StudentController {
     }
 
     private void checkNonEmptyFields() {
-        if(ValidateUtil.isEmpty(student.getId()))
-            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "student.registration.empty.id", null));
+        if (ValidateUtil.isEmpty(student.getId()))
+            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Student Id cannot be empty", null));
 
-        if(ValidateUtil.isEmpty(student.getName()))
-            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "student.registration.empty.name", null));
+        if (ValidateUtil.isEmpty(student.getName()))
+            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Name cannot be empty", null));
 
-        if(ValidateUtil.isEmpty(student.getSurname()))
-            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "student.registration.empty.surname", null));
+        if (ValidateUtil.isEmpty(student.getSurname()))
+            throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, "Surname cannot be empty", null));
     }
 
     private void setFieldAsNull(Student student) {
@@ -110,24 +110,25 @@ public class StudentController {
         studentService.deleteStudent(student.getId());
     }
 
+    // populate district dynamically when selected a city in dropdown
     public void onCityChange() {
         if (student.getCity() != null && !student.getCity().equals(""))
-            districties = data.get(student.getCity());
+            districties = districtByCityData.get(student.getCity());
         else
-            districties = new HashMap<String, String>();
+            districties = new ConcurrentHashMap<>();
     }
 
 
     public void onCityChangeForUpdate(Student student) {
         this.selectedStudent = student;
         if (selectedStudent.getCity() != null && !selectedStudent.getCity().equals(""))
-            districties = data.get(selectedStudent.getCity());
+            districties = districtByCityData.get(selectedStudent.getCity());
         else
-            districties = new HashMap<String, String>();
+            districties = new ConcurrentHashMap<>();
     }
 
     public List<Student> getStudentList() {
-        studentList =  studentService.getAllStudent();
+        studentList = studentService.getAllStudent();
         return studentList;
     }
 
@@ -161,12 +162,12 @@ public class StudentController {
         this.city = city;
     }
 
-    public List<City> getAllCity() {
-        return allCity;
+    public List<City> getAllCityList() {
+        return allCityList;
     }
 
-    public void setAllCity(List<City> allCity) {
-        this.allCity = allCity;
+    public void setAllCityList(List<City> allCityList) {
+        this.allCityList = allCityList;
     }
 
     public String getDistrict() {
@@ -177,27 +178,27 @@ public class StudentController {
         this.district = district;
     }
 
-    public Map<Object, Map<String, String>> getData() {
-        return data;
+    public ConcurrentMap<Object, ConcurrentMap<String, String>> getDistrictByCityData() {
+        return districtByCityData;
     }
 
-    public void setData(Map<Object, Map<String, String>> data) {
-        this.data = data;
+    public void setDistrictByCityData(ConcurrentMap<Object, ConcurrentMap<String, String>> districtByCityData) {
+        this.districtByCityData = districtByCityData;
     }
 
-    public Map<String, String> getCities() {
+    public ConcurrentMap<String, String> getCities() {
         return cities;
     }
 
-    public void setCities(Map<String, String> cities) {
+    public void setCities(ConcurrentMap<String, String> cities) {
         this.cities = cities;
     }
 
-    public Map<String, String> getDistricties() {
+    public ConcurrentMap<String, String> getDistricties() {
         return districties;
     }
 
-    public void setDistricties(Map<String, String> districties) {
+    public void setDistricties(ConcurrentMap<String, String> districties) {
         this.districties = districties;
     }
 

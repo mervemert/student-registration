@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tr.com.netas.student.registration.dao.StudentDao;
 import tr.com.netas.student.registration.entity.Student;
-import tr.com.netas.student.registration.exception.ItemNotFoundException;
 import tr.com.netas.student.registration.service.StudentService;
 import tr.com.netas.student.registration.util.ValidateUtil;
 
@@ -50,7 +49,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Optional<Student> findByStudentId(String studentId) {
+    public Optional<Student> findByStudentId(Long studentId) {
         return studentDao.findByStudentId(studentId);
     }
 
