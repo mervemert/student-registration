@@ -31,7 +31,7 @@
         <hsqldb.version>2.4.0</hsqldb.version>
         <javax.servlet.version>2.5</javax.servlet.version>
         <javax.validation.version>2.0.1.Final</javax.validation.version>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <slf4j.api.version>1.7.21</slf4j.api.version>
         <apache.commons.version>3.8.1</apache.commons.version>
         <lombok.version>1.18.6</lombok.version>
